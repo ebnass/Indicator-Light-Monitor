@@ -1,0 +1,110 @@
+Main Reference:
+http://www.instructables.com/id/Raspberry-Pi-I2C-Python/?ALLSTEPS
+
+TSL2561 light sensor is i2c device, can also check out adafruit tutorial for bmp085
+https://learn.adafruit.com/using-the-bmp085-with-raspberry-pi/overview
+
+---------------------------------------------------------------------
+
+Install Raspbian distro:
+https://www.raspberrypi.org/downloads/raspbian/
+
+----------------------------------------------------
+Wire the ribbon connector correctly!!!! the colored wire (pin1) should
+be in the corner of the pi board.
+----------------------------------------------------
+
+Run settings from desktop:
+Preferences -> Raspberry Pi Configuration
+	System:
+		Expand Filesystem
+		Overscan = Enable
+	Interfaces:
+		SSH: Enable
+		SPI: Enable
+		I2C: Enable
+
+---------------------------------------------------
+** Old instruction, file is no longer there
+On the Pi, I2C is disabled by default.
+
+$ sudo nano /etc/modprobe.d/raspi-blacklist.conf
+	comment this line -> blacklist i2c-bcm2708
+
+---------------------------------------------------
+Add the I2C module to the kernel
+
+$ sudo nano /etc/modules
+	add the following lines:
+		i2c-bcm2708 
+		i2c-dev
+		
+----------------------------------------------------
+reboot		
+----------------------------------------------------
+
+$ sudo apt-get update
+$ sudo apt-get install i2c-tools
+$ sudo apt-get install python-smbus
+$ sudo adduser pi i2c
+
+------------------------------------------------------
+
+test with
+$ sudo i2cdetect -y 1
+
+------------------------------------------------------
+
+Adafruits Python Library (Need Adafruit_I2C.py)
+https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code.git
+copy file to working directory
+Adafruit_I2C.py
+
+-------------------------------------------------------------
+
+
+
+$ sudo apt-get install git build-essential python-dev python-smbus
+$ sudo apt-get install python-rpi.gpio
+
+
+------------------------------------------------------
+Not needed:
+Adafruits C++ Library (Optional)
+git clone https://github.com/adafruit/TSL2561-Arduino-Library.git
+cd TSL2561-Arduino-Library
+------------------------------------------------------
+
+Adafruits Python Library (Nothing for TSL 2561 though. Need Adafruit_i2c though)
+git clone http://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code.git
+cd Adafruit-Raspberry-Pi-Python-Code
+ls
+
+-----------------------------------------------
+
+WiFi:
+sudo nano /etc/network/interfaces
+--------------------------------------------
+auto lo
+
+iface lo inet loopback
+iface eth0 inet dhcp
+
+auto wlan0
+allow-hotplug wlan0
+
+iface wlan0 inet dhcp
+  wpa-ssid "quahog"
+  wpa-psk "Pet0r1A731&*#^"
+--------------------------------------------
+
+simpson router dhcp reserved to 192.168.1.47 over LAN 
+  
+TOUCHSCREEN:
+https://learn.adafruit.com/adafruit-2-8-pitft-capacitive-touch/easy-install
+
+curl -SLs https://apt.adafruit.com/add | sudo bash
+
+sudo apt-get install -y adafruit-pitft-helper
+(the above may take 20 minutes)
+
